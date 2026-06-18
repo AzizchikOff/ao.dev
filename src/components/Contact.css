@@ -1,0 +1,51 @@
+.contact-block {
+  text-align: center;
+  padding: 140px 0 100px;
+  position: relative;
+  z-index: 1;
+}
+
+.sec-tag.center {
+  display: block;
+  margin-bottom: 24px;
+}
+
+.contact-block h2 {
+  font-family: var(--disp);
+  font-size: clamp(36px, 7vw, 84px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.02;
+}
+
+.contact-block h2 a {
+  color: var(--accent);
+  border-bottom: 2px solid transparent;
+  transition: border-color 0.3s ease;
+}
+
+.contact-block h2 a:hover {
+  border-color: var(--accent);
+}
+
+.contact-channels {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 56px;
+  flex-wrap: wrap;
+}
+
+.contact-channels a {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--paper-dim);
+  padding-bottom: 6px;
+  border-bottom: 1px solid transparent;
+  transition: all 0.25s ease;
+}
+
+.contact-channels a:hover {
+  color: var(--paper);
+  border-color: var(--paper-dim);
+}
