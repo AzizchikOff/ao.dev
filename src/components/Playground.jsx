@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { motion, useReducedMotion } from "framer-motion";
 import { RotateCcw, Shuffle } from "lucide-react";
 import "./Playground.css";
@@ -19,7 +20,8 @@ export default function Playground() {
   const [values, setValues] = useState(initial);
   const [step, setStep] = useState(0);
   const reduceMotion = useReducedMotion();
-  const lang = typeof document !== "undefined" ? document.documentElement.lang?.slice(0,2) : "uz";
+  const { i18n } = useTranslation();
+  const lang = i18n.language?.slice(0,2) || "uz";
   const t = labels[lang] || labels.uz;
   const total = values.length * (values.length - 1);
   const done = step >= total;
@@ -29,7 +31,7 @@ export default function Playground() {
     setStep(s => s + 1);
   };
   const reset = (shuffle = false) => {
-    setValues(shuffle ? [...initial].sort(() => Math.random() - 0.5) : initial);
+    setValues(shuffle ? [...initial].map(value => ({ value, order: Math.random() })).sort((a,b) => a.order-b.order).map(item => item.value) : initial);
     setStep(0);
   };
   return <section className="block lab-section" id="playground">
