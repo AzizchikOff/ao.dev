@@ -9,6 +9,8 @@ import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import Playground from "./components/Playground";
 import CommandPalette from "./components/CommandPalette";
+import Blog from "./components/Blog";
+import Resume from "./components/Resume";
 
 export default function App() {
   return (
@@ -24,6 +26,8 @@ export default function App() {
         <Work />
         <Experience />
         <Playground />
+        <Blog />
+        <Resume />
         <Contact />
       </main>
       <Footer />
