@@ -49,3 +49,6 @@
   color: var(--paper);
   border-color: var(--paper-dim);
 }
+
+/* Netlify contact form */
+.contact-form{width:min(690px,100%);margin:58px auto 0;text-align:left;display:grid;gap:20px}.contact-form-row{display:grid;grid-template-columns:1fr 1fr;gap:18px}.contact-form label{display:grid;gap:10px;font-family:var(--mono);font-size:12px;color:var(--paper-dim)}.contact-form input,.contact-form textarea{width:100%;border:1px solid var(--line);background:var(--ink-2);color:var(--paper);border-radius:9px;padding:15px 16px;font:14px var(--body);resize:vertical}.contact-form input:focus,.contact-form textarea:focus{outline:2px solid var(--accent);outline-offset:2px}.contact-submit{justify-self:start;background:var(--accent);color:var(--ink);font:600 13px var(--mono);padding:14px 23px;border-radius:100px;cursor:pointer}.contact-submit:disabled{opacity:.55;cursor:wait}.contact-status{min-height:20px;font-size:13px;color:var(--paper-dim)}.contact-honeypot{position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden}@media(max-width:640px){.contact-form-row{grid-template-columns:1fr}.contact-form{margin-top:36px}}
