@@ -63,7 +63,7 @@ export default function Navbar() {
         <div className="mobile-menu">
           {links.map((l) => (
             <a key={l.key} href={l.href} onClick={() => setMobileOpen(false)}>
-              {t(`nav.${l.key}`)}
+              {l.key === "playground" ? "Playground" : t(`nav.${l.key}`)}
             </a>
           ))}
           <a href="#contact" onClick={() => setMobileOpen(false)}>
