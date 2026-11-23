@@ -14,14 +14,13 @@ export default function CommandPalette() {
   useEffect(() => {
     const handler = e => {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
-        e.preventDefault(); setOpen(v => !v);
+        e.preventDefault(); setQuery(""); setOpen(v => !v);
       }
       if (e.key === "Escape") setOpen(false);
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
   }, []);
-  useEffect(() => { if (open) setQuery(""); }, [open]);
   const items = useMemo(() => destinations.map(([id, fallback]) => ({
     id, name: ["about","skills","work","experience","contact"].includes(id) ? t(`nav.${id}`) : fallback
   })).filter(item => item.name.toLowerCase().includes(query.toLowerCase())), [query,t]);
