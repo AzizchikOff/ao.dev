@@ -130,3 +130,6 @@ nav.scrolled {
     display: flex;
   }
 }
+
+/* AO monogram: original layout, adaptive to all four color themes */
+.logo{display:inline-flex;align-items:center;gap:12px;text-decoration:none;flex-shrink:0}.ao-mark{display:inline-flex;align-items:baseline;letter-spacing:-.17em;font-family:var(--disp);font-weight:700;font-size:30px;line-height:1;white-space:nowrap;padding-right:7px}.ao-letter-a{color:var(--paper)!important}.ao-letter-o{color:var(--accent)!important}.ao-dot{color:var(--accent)!important;font-size:28px;letter-spacing:0}.ao-brand-name{font-family:var(--mono);font-size:10px;letter-spacing:.025em;color:var(--paper-dim)!important;white-space:nowrap}@media(max-width:480px){.ao-brand-name{display:none}}
