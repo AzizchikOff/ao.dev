@@ -28,7 +28,7 @@ export default function Navbar() {
     <nav className={scrolled ? "scrolled" : ""}>
       <div className="wrap nav-inner">
         <a href="#" className="logo" data-cursor="Tepaga">
-          AO<span>.</span>dev
+          <span className="ao-mark" aria-hidden="true"><span className="ao-letter-a">A</span><span className="ao-letter-o">O</span><span className="ao-dot">.</span></span><span className="ao-brand-name">Abdulaziz Orifov</span>
         </a>
 
         <div className="nav-links">
