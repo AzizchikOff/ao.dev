@@ -7,6 +7,7 @@ import Work from "./components/Work";
 import Experience from "./components/Experience";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
+import Playground from "./components/Playground";
 
 export default function App() {
   return (
@@ -20,6 +21,7 @@ export default function App() {
         <Skills />
         <Work />
         <Experience />
+        <Playground />
         <Contact />
       </main>
       <Footer />
