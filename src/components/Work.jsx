@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import { ArrowUpRight, X, Search } from "lucide-react";
@@ -34,6 +34,25 @@ export default function Work() {
   const [query, setQuery] = useState("");
   const [tag, setTag] = useState("all");
   const [selected, setSelected] = useState(null);
+  const closeRef = useRef(null);
+  useEffect(() => {
+    if (!selected) return;
+    const previousFocus = document.activeElement;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    closeRef.current?.focus();
+    const handleKey = (event) => {
+      if (event.key === "Escape") setSelected(null);
+      if (event.key === "Tab") {
+        const controls = document.querySelectorAll(".case-dialog button, .case-dialog a[href]");
+        const first = controls[0]; const last = controls[controls.length - 1];
+        if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+        else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+      }
+    };
+    document.addEventListener("keydown", handleKey);
+    return () => { document.body.style.overflow = previousOverflow; document.removeEventListener("keydown", handleKey); previousFocus?.focus?.(); };
+  }, [selected]);
   const selectedIndex = selected ? projects.findIndex(p => p.index === selected.index) : -1;
   const tags = useMemo(() => [...new Set(projects.flatMap(p => p.tags))], [projects]);
   const filtered = projects.filter(p => (tag === "all" || p.tags.includes(tag)) &&
@@ -53,7 +72,7 @@ export default function Work() {
     {!filtered.length && <p role="status">{copy.empty}</p>}
     {selected && <div className="case-overlay" onMouseDown={e=>{if(e.target===e.currentTarget)closeProject()}}>
       <div className="case-dialog" role="dialog" aria-modal="true" aria-label={selected.title}>
-        <button className="case-close" onClick={closeProject} aria-label={copy.close}><X size={22}/></button>
+        <button ref={closeRef} className="case-close" onClick={closeProject} aria-label={copy.close}><X size={22}/></button>
         <span className="sec-tag">{selected.index}</span><h2>{selected.title}</h2>
         <h3>{copy.overview}</h3><p>{selected.desc}</p>
         <h3>{copy.stack}</h3><div className="project-tags">{selected.tags.map(v=><span key={v}>{v}</span>)}</div>
