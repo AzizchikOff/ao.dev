@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import { Award, CalendarDays, ShieldCheck } from "lucide-react";
 import "./Certificates.css";
 
-export const certificates = [
+const certificates = [
   { id: "simplilearn-full-stack-course", name: "Free Full Stack Developer Course", issuer: "Simplilearn SkillUp", date: "2026-10-13", code: "10883781", type: "Course completion" },
   { id: "simplilearn-full-stack-101", name: "Full-Stack Development 101", issuer: "Simplilearn SkillUp", date: "2026-10-12", code: "10879312", type: "Course completion" },
   { id: "hackerrank-javascript-basic", name: "JavaScript (Basic)", issuer: "HackerRank", date: "2026-10-12", code: "746DCF578CE5", type: "Skills certification" },
