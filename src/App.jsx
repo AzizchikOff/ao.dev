@@ -8,12 +8,14 @@ import Experience from "./components/Experience";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import Playground from "./components/Playground";
+import CommandPalette from "./components/CommandPalette";
 
 export default function App() {
   return (
     <>
       <div className="bg-grid" />
       <CustomCursor />
+      <CommandPalette />
       <Navbar />
       <main>
         <Hero />
