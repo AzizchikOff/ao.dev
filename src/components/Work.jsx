@@ -34,6 +34,7 @@ export default function Work() {
   const [query, setQuery] = useState("");
   const [tag, setTag] = useState("all");
   const [selected, setSelected] = useState(null);
+  const slugFor = (project) => project.index.split(" / ").pop().toLowerCase();
   const closeRef = useRef(null);
   useEffect(() => {
     if (!selected) return;
@@ -59,15 +60,17 @@ export default function Work() {
     [p.title,p.desc,...p.tags].join(" ").toLowerCase().includes(query.trim().toLowerCase()));
   const openProject = (project) => {
     setSelected(project);
-    window.history.replaceState(null,"",`#work/${encodeURIComponent(project.index.split(" / ").pop().toLowerCase())}`);
+    window.history.replaceState(null,"",`#work/${encodeURIComponent(slugFor(project))}`);
   };
   const closeProject = () => { setSelected(null); window.history.replaceState(null,"","#work"); };
+  const goToProject = (project) => { setSelected(project); window.history.replaceState(null,"",`#work/${encodeURIComponent(slugFor(project))}`); };
   return <section className="block" id="work"><div className="wrap">
     <div className="sec-head"><span className="sec-tag">{t("work.tag")}</span><div className="sec-line"/><h2>{t("work.title")}</h2></div>
     <div className="work-filters">
       <label className="work-search"><Search size={17}/><input value={query} onChange={e => setQuery(e.target.value)} placeholder={copy.search} aria-label={copy.search}/></label>
       <div className="work-tags"><button className={tag==="all"?"active":""} onClick={()=>setTag("all")}>{copy.all}</button>{tags.map(value=><button key={value} className={tag===value?"active":""} onClick={()=>setTag(value)}>{value}</button>)}</div>
     </div>
+    <p className="work-demo-notice">{copy.disclaimer}</p>
     <div className="project-list">{filtered.map((project,i)=><ProjectRow key={project.index} project={project} flip={i%2===1} viewLabel={t("work.viewProject")} onOpen={()=>openProject(project)}/>)}</div>
     {!filtered.length && <p role="status">{copy.empty}</p>}
     {selected && <div className="case-overlay" onMouseDown={e=>{if(e.target===e.currentTarget)closeProject()}}>
@@ -77,7 +80,7 @@ export default function Work() {
         <h3>{copy.overview}</h3><p>{selected.desc}</p>
         <h3>{copy.stack}</h3><div className="project-tags">{selected.tags.map(v=><span key={v}>{v}</span>)}</div>
         <p className="case-disclaimer">{copy.disclaimer}</p>
-        <button className="btn-primary" onClick={()=>setSelected(projects[(selectedIndex+1)%projects.length])}>{copy.next} <ArrowUpRight size={15}/></button>
+        <button className="btn-primary" onClick={()=>goToProject(projects[(selectedIndex+1)%projects.length])}>{copy.next} <ArrowUpRight size={15}/></button>
       </div>
     </div>}
   </div></section>;
