@@ -24,7 +24,7 @@ function ProjectRow({ project, flip, viewLabel, onOpen }) {
 const descriptions = {
   uz: {search:"Loyihani qidirish",all:"Barchasi",close:"Yopish",overview:"Loyiha tavsifi",stack:"Texnologiyalar",disclaimer:"Portfolio namuna kontenti. Haqiqiy loyiha natijalari va havolalari tasdiqlangach qo‘shiladi.",next:"Keyingi loyiha",empty:"Loyihalar topilmadi"},
   ru: {search:"Поиск проектов",all:"Все",close:"Закрыть",overview:"Описание проекта",stack:"Технологии",disclaimer:"Демонстрационный контент портфолио. Подтверждённые результаты и ссылки будут добавлены позже.",next:"Следующий проект",empty:"Проекты не найдены"},
-  en: {search:"Search projects",all:"All",close:"Project details",overview:"Project overview",stack:"Technology stack",disclaimer:"Illustrative portfolio content. Verified project results and links will be added when available.",next:"Next project",empty:"No matching projects"}
+  en: {search:"Search projects",all:"All",close:"Close",overview:"Project overview",stack:"Technology stack",disclaimer:"Illustrative portfolio content. Verified project results and links will be added when available.",next:"Next project",empty:"No matching projects"}
 };
 export default function Work() {
   const { t, i18n } = useTranslation();
@@ -34,6 +34,7 @@ export default function Work() {
   const [query, setQuery] = useState("");
   const [tag, setTag] = useState("all");
   const [selected, setSelected] = useState(null);
+  const selectedIndex = selected ? projects.findIndex(p => p.index === selected.index) : -1;
   const tags = useMemo(() => [...new Set(projects.flatMap(p => p.tags))], [projects]);
   const filtered = projects.filter(p => (tag === "all" || p.tags.includes(tag)) &&
     [p.title,p.desc,...p.tags].join(" ").toLowerCase().includes(query.trim().toLowerCase()));
@@ -57,7 +58,7 @@ export default function Work() {
         <h3>{copy.overview}</h3><p>{selected.desc}</p>
         <h3>{copy.stack}</h3><div className="project-tags">{selected.tags.map(v=><span key={v}>{v}</span>)}</div>
         <p className="case-disclaimer">{copy.disclaimer}</p>
-        <button className="btn-primary" onClick={()=>setSelected(projects[(projects.indexOf(selected)+1)%projects.length])}>{copy.next} <ArrowUpRight size={15}/></button>
+        <button className="btn-primary" onClick={()=>setSelected(projects[(selectedIndex+1)%projects.length])}>{copy.next} <ArrowUpRight size={15}/></button>
       </div>
     </div>}
   </div></section>;
