@@ -11,6 +11,7 @@ import Playground from "./components/Playground";
 import CommandPalette from "./components/CommandPalette";
 import Blog from "./components/Blog";
 import Resume from "./components/Resume";
+import Certificates from "./components/Certificates";
 
 export default function App() {
   return (
@@ -27,6 +28,7 @@ export default function App() {
         <Experience />
         <Playground />
         <Blog />
+        <Certificates />
         <Resume />
         <Contact />
       </main>
