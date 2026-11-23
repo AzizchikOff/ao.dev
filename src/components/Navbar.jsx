@@ -22,6 +22,8 @@ export default function Navbar() {
     { href: "#work", key: "work" },
     { href: "#experience", key: "experience" },
     { href: "#playground", key: "playground" },
+    { href: "#blog", key: "blog" },
+    { href: "#resume", key: "resume" },
   ];
 
   return (
@@ -34,7 +36,7 @@ export default function Navbar() {
         <div className="nav-links">
           {links.map((l) => (
             <a key={l.key} href={l.href} data-cursor="O'tish">
-              {l.key === "playground" ? "Playground" : t(`nav.${l.key}`)}
+              {["playground","blog","resume"].includes(l.key) ? ({playground:"Playground",blog:"Blog",resume:"CV"})[l.key] : t(`nav.${l.key}`)}
             </a>
           ))}
           <a href="#contact" className="nav-cta" data-cursor="Yozish">
@@ -63,7 +65,7 @@ export default function Navbar() {
         <div className="mobile-menu">
           {links.map((l) => (
             <a key={l.key} href={l.href} onClick={() => setMobileOpen(false)}>
-              {l.key === "playground" ? "Playground" : t(`nav.${l.key}`)}
+              {["playground","blog","resume"].includes(l.key) ? ({playground:"Playground",blog:"Blog",resume:"CV"})[l.key] : t(`nav.${l.key}`)}
             </a>
           ))}
           <a href="#contact" onClick={() => setMobileOpen(false)}>
