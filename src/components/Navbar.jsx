@@ -23,6 +23,7 @@ export default function Navbar() {
     { href: "#experience", key: "experience" },
     { href: "#playground", key: "playground" },
     { href: "#blog", key: "blog" },
+    { href: "#certificates", key: "certificates" },
     { href: "#resume", key: "resume" },
   ];
 
@@ -36,7 +37,7 @@ export default function Navbar() {
         <div className="nav-links">
           {links.map((l) => (
             <a key={l.key} href={l.href} data-cursor="O'tish">
-              {["playground","blog","resume"].includes(l.key) ? ({playground:"Playground",blog:"Blog",resume:"CV"})[l.key] : t(`nav.${l.key}`)}
+              {["playground","blog","resume","certificates"].includes(l.key) ? ({playground:"Playground",blog:"Blog",resume:"CV",certificates:"Certificates"})[l.key] : t(`nav.${l.key}`)}
             </a>
           ))}
           <a href="#contact" className="nav-cta" data-cursor="Yozish">
