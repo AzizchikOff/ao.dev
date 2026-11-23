@@ -21,6 +21,7 @@ export default function Navbar() {
     { href: "#skills", key: "skills" },
     { href: "#work", key: "work" },
     { href: "#experience", key: "experience" },
+    { href: "#playground", key: "playground" },
   ];
 
   return (
@@ -33,7 +34,7 @@ export default function Navbar() {
         <div className="nav-links">
           {links.map((l) => (
             <a key={l.key} href={l.href} data-cursor="O'tish">
-              {t(`nav.${l.key}`)}
+              {l.key === "playground" ? "Playground" : t(`nav.${l.key}`)}
             </a>
           ))}
           <a href="#contact" className="nav-cta" data-cursor="Yozish">
