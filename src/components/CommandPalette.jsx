@@ -5,7 +5,7 @@ import "./CommandPalette.css";
 
 const destinations = [
   ["about", "About"], ["skills", "Skills"], ["work", "Projects"],
-  ["experience", "Experience"], ["playground", "Playground"], ["contact", "Contact"]
+  ["experience", "Experience"], ["playground", "Playground"], ["blog", "Blog"], ["resume", "CV"], ["contact", "Contact"]
 ];
 export default function CommandPalette() {
   const { t } = useTranslation();
