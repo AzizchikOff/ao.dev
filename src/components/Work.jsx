@@ -11,7 +11,7 @@ function ProjectRow({ project, flip, viewLabel, onOpen }) {
   return (
     <motion.article className={`project ${flip ? "project-row-flip" : ""}`} ref={ref}
       initial={{ opacity: 0, y: 30 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.7 }}>
-      <div className="project-visual" data-cursor="Ochish"><div className="glow" /><span className="mono-tag">{project.file}</span></div>
+      <div className="project-visual" data-cursor="Ochish">{project.imageUrl?.startsWith("https://") && <img src={project.imageUrl} alt={project.title} loading="lazy" style={{width:"100%",height:"100%",objectFit:"cover",position:"absolute",inset:0}}/>}<div className="glow" /><span className="mono-tag">{project.file}</span></div>
       <div className="project-body">
         <div className="project-index">{project.index}</div><h3>{project.title}</h3><p>{project.desc}</p>
         <div className="project-tags">{project.tags.map(tag => <span key={tag}>{tag}</span>)}</div>
@@ -79,7 +79,7 @@ export default function Work() {
         <span className="sec-tag">{selected.index}</span><h2>{selected.title}</h2>
         <h3>{copy.overview}</h3><p>{selected.desc}</p>
         <h3>{copy.stack}</h3><div className="project-tags">{selected.tags.map(v=><span key={v}>{v}</span>)}</div>
-        <p className="case-disclaimer">{copy.disclaimer}</p>
+        {selected.demoUrl?.startsWith("https://") && <a href={selected.demoUrl} target="_blank" rel="noreferrer">Live demo ↗</a>}{selected.sourceUrl?.startsWith("https://") && <a href={selected.sourceUrl} target="_blank" rel="noreferrer">Source code ↗</a>}<p className="case-disclaimer">{copy.disclaimer}</p>
         <button className="btn-primary" onClick={()=>goToProject(projects[(selectedIndex+1)%projects.length])}>{copy.next} <ArrowUpRight size={15}/></button>
       </div>
     </div>}
