@@ -1,3 +1,5 @@
+import {useState,useEffect} from "react";
+import {api,configured} from "./lib/portfolioApi";
 import CustomCursor from "./components/CustomCursor";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
@@ -16,6 +18,8 @@ import DeveloperTerminal from "./components/DeveloperTerminal";
 import Admin from "./components/Admin";
 
 export default function App() {
+ const [settings,setSettings]=useState({});
+ useEffect(()=>{if(configured && !window.location.pathname.startsWith("/admin"))api("/rest/v1/portfolio_content?section=eq.settings&select=content").then(r=>setSettings(r[0]?.content||{})).catch(()=>{});},[]);
   if (window.location.pathname.replace(/\/$/, "") === "/admin") return <Admin />;
   return (
     <>
@@ -30,10 +34,10 @@ export default function App() {
         <Work />
         <Experience />
         <Playground />
-        <DeveloperTerminal />
-        <Blog />
+        {settings.showTerminal!==false && <DeveloperTerminal />}
+        {settings.showBlog!==false && <Blog />}
         <Certificates />
-        <Resume />
+        {settings.showResume!==false && <Resume />}
         <Contact />
       </main>
       <Footer />
