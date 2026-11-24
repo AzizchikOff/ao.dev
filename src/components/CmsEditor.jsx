@@ -3,7 +3,9 @@ import { api } from "../lib/portfolioApi";
 import uz from "../i18n/locales/uz";
 import ru from "../i18n/locales/ru";
 import en from "../i18n/locales/en";
-const defaults={uz,ru,en};
+import { blogDefaults } from "../lib/blogDefaults";
+import { resumeDefaults } from "../lib/resumeDefaults";
+const defaults=Object.fromEntries(Object.entries({uz,ru,en}).map(([l,v])=>[l,{...v,blog:blogDefaults[l],resume:resumeDefaults[l]}]));
 function Fields({value,onChange,label}){
  if(Array.isArray(value)) return <fieldset><legend>{label}</legend>{value.map((v,i)=><div key={i} className="cms-item"><Fields label={String(i+1)} value={v} onChange={n=>onChange(value.map((x,j)=>j===i?n:x))}/><button type="button" onClick={()=>onChange(value.filter((_,j)=>j!==i))}>O‘chirish</button></div>)}<button type="button" disabled={!value.length} onClick={()=>onChange([...value,structuredClone(value[0])])}>Nusxa qo‘shish</button></fieldset>;
  if(value && typeof value==="object") return <fieldset><legend>{label}</legend>{Object.entries(value).map(([k,v])=><Fields key={k} label={k} value={v} onChange={n=>onChange({...value,[k]:n})}/>)}</fieldset>;
