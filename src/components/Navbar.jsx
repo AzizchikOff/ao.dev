@@ -7,6 +7,7 @@ import "./Navbar.css";
 
 export default function Navbar() {
   const { t } = useTranslation();
+  const [moreOpen,setMoreOpen]=useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -33,11 +34,11 @@ export default function Navbar() {
     <nav className={scrolled ? "scrolled" : ""}>
       <div className="wrap nav-inner">
         <a href="/" className="logo" data-cursor="Tepaga">
-          <span className="ao-mark" aria-hidden="true"><span className="ao-letter-a">A</span><span className="ao-letter-o">O</span><span className="ao-dot">.</span></span><span className="ao-brand-name">Abdulaziz Orifov</span>
+          <span className="ao-mark" aria-hidden="true"><span className="ao-letter-a">A</span><span className="ao-letter-o">O</span><span className="ao-dot">.</span></span><span className="ao-brand-name">{t("hero.firstName",{defaultValue:"Abdulaziz"})} {t("hero.lastName",{defaultValue:"Orifov"})}</span>
         </a>
 
         <div className="nav-links">
-          {links.map((l) => (
+          {links.filter(l=>["home","about","work","certificates","blog"].includes(l.key)).map((l) => (
             <a key={l.key} href={l.href} aria-current={window.location.pathname===l.href?"page":undefined} data-cursor="O'tish">
               {["playground","blog","resume","certificates","terminal"].includes(l.key) ? ({terminal:"Terminal",playground:"Playground",blog:"Blog",resume:"CV",certificates:"Certificates"})[l.key] : t(`nav.${l.key}`,{defaultValue:l.key==="home"?"Home":l.key})}
             </a>
@@ -45,7 +46,7 @@ export default function Navbar() {
           <a href="/contact" className="nav-cta" data-cursor="Yozish">
             {t("nav.contact")}
           </a>
-          <div className="nav-tools">
+          <div className="nav-more"><button type="button" aria-expanded={moreOpen} onClick={()=>setMoreOpen(v=>!v)}>•••</button>{moreOpen&&<div className="nav-more-menu">{links.filter(l=>!["home","about","work","certificates","blog"].includes(l.key)).map(l=><a key={l.key} href={l.href}>{t(`nav.${l.key}`,{defaultValue:l.key})}</a>)}<a href="/github">GitHub</a></div>}</div><div className="nav-tools"><a href="/admin">Admin</a>
             <LanguageSwitcher />
             <ThemeSwitcher />
           </div>
@@ -65,7 +66,7 @@ export default function Navbar() {
       </div>
 
       {mobileOpen && (
-        <div className="mobile-menu">
+        <div className="mobile-menu"><a href="/admin">Admin</a><a href="/github">GitHub</a>
           {links.map((l) => (
             <a key={l.key} href={l.href} aria-current={window.location.pathname===l.href?"page":undefined} onClick={() => setMobileOpen(false)}>
               {["playground","blog","resume","certificates","terminal"].includes(l.key) ? ({terminal:"Terminal",playground:"Playground",blog:"Blog",resume:"CV",certificates:"Certificates"})[l.key] : t(`nav.${l.key}`,{defaultValue:l.key==="home"?"Home":l.key})}
