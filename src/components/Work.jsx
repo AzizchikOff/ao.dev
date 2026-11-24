@@ -28,31 +28,21 @@ const descriptions = {
 };
 export default function Work() {
   const { t, i18n } = useTranslation();
-  const projects = t("work.projects", { returnObjects: true });
+  const data = t("work.projects", { returnObjects: true });
+  const projects = useMemo(()=>Array.isArray(data)?data.filter(p=>p&&Array.isArray(p.tags)):[],[data]);
   const lang = i18n.language?.slice(0,2);
   const copy = descriptions[lang] || descriptions.uz;
   const [query, setQuery] = useState("");
   const [tag, setTag] = useState("all");
   const [selected, setSelected] = useState(null);
-  const slugFor = (project) => project.index.split(" / ").pop().toLowerCase();
+  const slugFor = (project) => String(project.index||project.title).split(" / ").pop().toLowerCase();
   const closeRef = useRef(null);
   useEffect(() => {
     if (!selected) return;
-    const previousFocus = document.activeElement;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
     closeRef.current?.focus();
-    const handleKey = (event) => {
-      if (event.key === "Escape") {setSelected(null);window.history.replaceState(null,"","/work");}
-      if (event.key === "Tab") {
-        const controls = document.querySelectorAll(".case-dialog button, .case-dialog a[href]");
-        const first = controls[0]; const last = controls[controls.length - 1];
-        if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
-        else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
-      }
-    };
-    document.addEventListener("keydown", handleKey);
-    return () => { document.body.style.overflow = previousOverflow; document.removeEventListener("keydown", handleKey); previousFocus?.focus?.(); };
+    const handleKey = event => {if(event.key==="Escape"){setSelected(null);window.history.replaceState(null,"","/work");}};
+    document.addEventListener("keydown",handleKey);
+    return ()=>document.removeEventListener("keydown",handleKey);
   }, [selected]);
   const selectedIndex = selected ? projects.findIndex(p => p.index === selected.index) : -1;
   const tags = useMemo(() => [...new Set(projects.flatMap(p => p.tags))], [projects]);
@@ -66,16 +56,15 @@ export default function Work() {
   const goToProject = (project) => { setSelected(project); window.history.replaceState(null,"",`#work/${encodeURIComponent(slugFor(project))}`); };
   return <section className="block" id="work"><div className="wrap">
     <div className="sec-head"><span className="sec-tag">{t("work.tag")}</span><div className="sec-line"/><h2>{t("work.title")}</h2></div>
-    <div className="showcase-layout"><aside className="work-filters">
+    <div className="showcase-layout"><aside className="work-filters"><div className="showcase-profile"><strong>{t("hero.firstName",{defaultValue:"Abdulaziz"})} {t("hero.lastName",{defaultValue:"Orifov"})}</strong><p>{t("about.meta.statusVal")}</p><a href="/resume">CV ↗</a><a href="/contact">{t("nav.contact")} ↗</a><a href="/playground">Playground ↗</a><a href="/github">GitHub Live ↗</a></div>
       <label className="work-search"><Search size={17}/><input value={query} onChange={e => setQuery(e.target.value)} placeholder={copy.search} aria-label={copy.search}/></label>
       <div className="work-tags"><button className={tag==="all"?"active":""} onClick={()=>setTag("all")}>{copy.all}</button>{tags.map(value=><button key={value} className={tag===value?"active":""} onClick={()=>setTag(value)}>{value}</button>)}</div>
     </aside><div className="showcase-results">
     <p className="work-demo-notice">{copy.disclaimer}</p>
     <div className="project-list">{filtered.map((project,i)=><ProjectRow key={project.index} project={project} flip={i%2===1} viewLabel={t("work.viewProject")} onOpen={()=>openProject(project)}/>)}</div>
     {!filtered.length && <p role="status">{copy.empty}</p>}
-    </div></div>
-    {selected && <div className="case-overlay" onMouseDown={e=>{if(e.target===e.currentTarget)closeProject()}}>
-      <div className="case-dialog" role="dialog" aria-modal="true" aria-label={selected.title}>
+    {selected && <div className="case-inline">
+      <div className="case-inline-body" aria-label={selected.title}>
         <button ref={closeRef} className="case-close" onClick={closeProject} aria-label={copy.close}><X size={22}/></button>
         <span className="sec-tag">{selected.index}</span><h2>{selected.title}</h2>
         <h3>{copy.overview}</h3><p>{selected.desc}</p>
@@ -84,5 +73,6 @@ export default function Work() {
         <button className="btn-primary" onClick={()=>goToProject(projects[(selectedIndex+1)%projects.length])}>{copy.next} <ArrowUpRight size={15}/></button>
       </div>
     </div>}
+    </div></div>
   </div></section>;
 }
