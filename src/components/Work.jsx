@@ -43,7 +43,7 @@ export default function Work() {
     document.body.style.overflow = "hidden";
     closeRef.current?.focus();
     const handleKey = (event) => {
-      if (event.key === "Escape") setSelected(null);
+      if (event.key === "Escape") {setSelected(null);window.history.replaceState(null,"","/work");}
       if (event.key === "Tab") {
         const controls = document.querySelectorAll(".case-dialog button, .case-dialog a[href]");
         const first = controls[0]; const last = controls[controls.length - 1];
@@ -66,13 +66,14 @@ export default function Work() {
   const goToProject = (project) => { setSelected(project); window.history.replaceState(null,"",`#work/${encodeURIComponent(slugFor(project))}`); };
   return <section className="block" id="work"><div className="wrap">
     <div className="sec-head"><span className="sec-tag">{t("work.tag")}</span><div className="sec-line"/><h2>{t("work.title")}</h2></div>
-    <div className="work-filters">
+    <div className="showcase-layout"><aside className="work-filters">
       <label className="work-search"><Search size={17}/><input value={query} onChange={e => setQuery(e.target.value)} placeholder={copy.search} aria-label={copy.search}/></label>
       <div className="work-tags"><button className={tag==="all"?"active":""} onClick={()=>setTag("all")}>{copy.all}</button>{tags.map(value=><button key={value} className={tag===value?"active":""} onClick={()=>setTag(value)}>{value}</button>)}</div>
-    </div>
+    </aside><div className="showcase-results">
     <p className="work-demo-notice">{copy.disclaimer}</p>
     <div className="project-list">{filtered.map((project,i)=><ProjectRow key={project.index} project={project} flip={i%2===1} viewLabel={t("work.viewProject")} onOpen={()=>openProject(project)}/>)}</div>
     {!filtered.length && <p role="status">{copy.empty}</p>}
+    </div></div>
     {selected && <div className="case-overlay" onMouseDown={e=>{if(e.target===e.currentTarget)closeProject()}}>
       <div className="case-dialog" role="dialog" aria-modal="true" aria-label={selected.title}>
         <button ref={closeRef} className="case-close" onClick={closeProject} aria-label={copy.close}><X size={22}/></button>
