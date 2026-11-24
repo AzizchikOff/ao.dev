@@ -4,6 +4,8 @@ import "./Admin.css";
 
 const empty = { title: "", issuer: "", issued_on: "", certificate_code: "", credential_url: "", published: false, position: 0 };
 export default function Admin() {
+  const [tab, setTab] = useState("dashboard");
+  const [file, setFile] = useState(null);
   const [token, setToken] = useState("");
   const [rows, setRows] = useState([]);
   const [form, setForm] = useState(empty);
@@ -28,12 +30,18 @@ export default function Admin() {
     event.preventDefault();
     await run(async () => {
       const body = { ...form, issued_on: form.issued_on || null, credential_url: form.credential_url || null };
+      if (file) {
+        if (file.type !== "application/pdf" || file.size > 10485760) throw new Error("PDF fayl 10 MB dan oshmasligi kerak.");
+        const path = crypto.randomUUID() + ".pdf";
+        await api("/storage/v1/object/portfolio-certificates/" + path, { token, method: "POST", body: file, headers: {"Content-Type":"application/pdf"} });
+        body.file_path = path;
+      }
       await api("/rest/v1/portfolio_certificates" + (editing ? "?id=eq." + encodeURIComponent(editing) : ""), { token, method: editing ? "PATCH" : "POST", body });
-      setRows(await listCertificates(token)); setEditing(null); setForm(empty); setStatus("Saqlandi.");
+      setRows(await listCertificates(token)); setEditing(null); setForm(empty); setFile(null); setStatus("Saqlandi.");
     });
   }
   function edit(row) {
-    setEditing(row.id);
+    setEditing(row.id); setFile(null);
     setForm(Object.fromEntries(Object.keys(empty).map(k => [k, row[k] ?? empty[k]])));
   }
   async function remove(id) {
@@ -46,12 +54,13 @@ export default function Admin() {
   }
   const change = (k,v) => setForm(f => ({ ...f, [k]: v }));
   return <main className="admin-shell"><header className="admin-head"><a href="/">AO / Portfolio</a><h1>Admin Dashboard</h1>{token && <button onClick={() => {setToken("");setRows([]);setForm(empty);setEditing(null);setStatus("");}}>Chiqish</button>}</header>
-    {!configured ? <p>Supabase environment variables are missing.</p> : !token ? <form className="admin-card" onSubmit={login}><h2>Administrator login</h2><label>Email<input name="email" type="email" autoComplete="username" required /></label><label>Parol<input name="password" type="password" autoComplete="current-password" required /></label><button disabled={busy}>Kirish</button></form> : <>
+    {!configured ? <p>Supabase environment variables are missing.</p> : !token ? <form className="admin-card" onSubmit={login}><h2>Administrator login</h2><label>Email<input name="email" type="email" autoComplete="username" required /></label><label>Parol<input name="password" type="password" autoComplete="current-password" required /></label><button disabled={busy}>Kirish</button></form> : <div className="admin-layout"><aside className="admin-sidebar"><button onClick={()=>setTab("dashboard")}>Dashboard</button><button onClick={()=>setTab("certificates")}>Sertifikatlar</button></aside><div className="admin-main">{tab === "dashboard" ? <section className="admin-card"><h2>Portfolio boshqaruvi</h2><p>Sertifikatlar: {rows.length}</p><button onClick={()=>setTab("certificates")}>Sertifikatlarni boshqarish</button></section> : <>
       <form className="admin-card" onSubmit={save}><h2>{editing ? "Sertifikatni tahrirlash" : "Yangi sertifikat"}</h2>
       { [["title","Nomi","text"],["issuer","Tashkilot","text"],["issued_on","Sana","date"],["certificate_code","Sertifikat kodi","text"],["credential_url","Tasdiqlash URL","url"]].map(([k,label,type]) => <label key={k}>{label}<input type={type} value={form[k]} onChange={e=>change(k,e.target.value)} required={k==="title"||k==="issuer"} /></label>)}
+      <label>PDF fayl (10 MB gacha)<input key={editing || "new"} type="file" accept="application/pdf" onChange={e=>setFile(e.target.files[0] || null)}/></label>
       <label>Tartib<input type="number" value={form.position} onChange={e=>change("position",Number(e.target.value))}/></label>
       <label className="admin-check"><input type="checkbox" checked={form.published} onChange={e=>change("published",e.target.checked)}/>Saytda ko‘rsatish</label>
       <button disabled={busy}>Saqlash</button>{editing && <button type="button" onClick={()=>{setEditing(null);setForm(empty);}}>Bekor qilish</button>}</form>
       <section className="admin-card"><h2>Sertifikatlar ({rows.length})</h2>{rows.map(row=><article className="admin-row" key={row.id}><div><strong>{row.title}</strong><p>{row.issuer} · {row.published?"Nashr qilingan":"Qoralama"}</p></div><button disabled={busy} onClick={()=>edit(row)}>Tahrirlash</button><button disabled={busy} onClick={()=>remove(row.id)}>O‘chirish</button></article>)}</section>
-    </>}{status && <p role="status" className="admin-status">{status}</p>}</main>;
+    </>}</div></div>}{status && <p role="status" className="admin-status">{status}</p>}</main>;
 }
