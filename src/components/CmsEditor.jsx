@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { api } from "../lib/portfolioApi";
 import uz from "../i18n/locales/uz";
 import ru from "../i18n/locales/ru";
@@ -22,6 +22,7 @@ export default function CmsEditor({section,token,stored,onSaved}){
  const [draft,setDraft]=useState(()=>Object.fromEntries(Object.keys(defaults).map(l=>[l,merge(defaults[l][section],stored?.[l])])));
  const [baseline,setBaseline]=useState(()=>JSON.stringify(draft));
  const dirty=JSON.stringify(draft)!==baseline;
+ useEffect(()=>{if(!dirty)return;const warn=e=>{e.preventDefault();e.returnValue="";};window.addEventListener("beforeunload",warn);return()=>window.removeEventListener("beforeunload",warn)},[dirty]);
  const [status,setStatus]=useState("");
  const [busy,setBusy]=useState(false);
  async function save(e){e.preventDefault();setBusy(true);setStatus("");try{await api("/rest/v1/portfolio_content?on_conflict=section",{token,method:"POST",headers:{Prefer:"resolution=merge-duplicates"},body:{section,content:draft,updated_at:new Date().toISOString()}});onSaved(section,draft);setBaseline(JSON.stringify(draft));setStatus("Saqlandi");}catch(e){setStatus(e.message)}finally{setBusy(false)}}
