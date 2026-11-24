@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import { ArrowUpRight, X, Search } from "lucide-react";
 import useReveal from "../hooks/useReveal";
+import GitHubLive from "./GitHubLive";
 import "./Work.css";
 import "./WorkEnhancements.css";
 
@@ -73,6 +74,6 @@ export default function Work() {
         <button className="btn-primary" onClick={()=>goToProject(projects[(selectedIndex+1)%projects.length])}>{copy.next} <ArrowUpRight size={15}/></button>
       </div>
     </div>}
-    </div></div>
+    </div><aside className="showcase-side"><section className="showcase-side-card"><h3>Portfolio Assistant</h3><p>{lang==="uz"?"Loyihalar va texnologiyalar haqida ma’lumot":lang==="ru"?"Проекты и технологии":"Explore projects and technologies"}</p><a href="/skills">{t("nav.skills",{defaultValue:"Skills"})} ↗</a><a href="/contact">{t("nav.contact")} ↗</a></section><GitHubLive/><section className="showcase-side-card"><h3>Developer Playground</h3><a href="/playground">Playground ↗</a><a href="/terminal">Terminal ↗</a></section></aside></div>
   </div></section>;
 }
