@@ -6,14 +6,15 @@ import en from "../i18n/locales/en";
 import { blogDefaults } from "../lib/blogDefaults";
 import { resumeDefaults } from "../lib/resumeDefaults";
 const defaults=Object.fromEntries(Object.entries({uz,ru,en}).map(([l,v])=>[l,{...v,about:{...v.about,photoUrl:""},work:{...v.work,projects:v.work.projects.map(p=>({...p,imageUrl:"",demoUrl:"",sourceUrl:""}))},blog:blogDefaults[l],resume:{...resumeDefaults[l],pdfUrl:""}}]));
+function merge(template,value){if(Array.isArray(template))return Array.isArray(value)?value.map(v=>merge(template[0],v)):structuredClone(template);if(template&&typeof template==='object')return Object.fromEntries(Object.entries(template).map(([k,v])=>[k,merge(v,value?.[k])]));return typeof value===typeof template?value:template??value;}
 function Fields({value,onChange,label,template}){
- if(Array.isArray(value)) return <fieldset><legend>{label}</legend>{value.map((v,i)=><div key={i} className="cms-item"><Fields label={String(i+1)} value={v} onChange={n=>onChange(value.map((x,j)=>j===i?n:x))}/><button type="button" onClick={()=>onChange(value.filter((_,j)=>j!==i))}>O‘chirish</button></div>)}<button type="button" disabled={!value.length && !template?.length} onClick={()=>onChange([...value,structuredClone(value[0]??template[0])])}>Nusxa qo‘shish</button></fieldset>;
+ if(Array.isArray(value)) return <fieldset><legend>{label}</legend>{value.map((v,i)=><div key={i} className="cms-item"><Fields label={String(i+1)} template={template?.[0]} value={v} onChange={n=>onChange(value.map((x,j)=>j===i?n:x))}/><button type="button" onClick={()=>onChange(value.filter((_,j)=>j!==i))}>O‘chirish</button></div>)}<button type="button" disabled={!value.length && !template?.length} onClick={()=>onChange([...value,structuredClone(value[0]??template[0])])}>Nusxa qo‘shish</button></fieldset>;
  if(value && typeof value==="object") return <fieldset><legend>{label}</legend>{Object.entries(value).map(([k,v])=><Fields key={k} label={k} template={template?.[k]} value={v} onChange={n=>onChange({...value,[k]:n})}/>)}</fieldset>;
  return <label>{label}<textarea rows={String(value).length>100?4:2} value={value??""} onChange={e=>onChange(e.target.value)}/></label>;
 }
 export default function CmsEditor({section,token,stored,onSaved}){
  const [lang,setLang]=useState("uz");
- const [draft,setDraft]=useState(()=>Object.fromEntries(Object.keys(defaults).map(l=>[l,{...defaults[l][section],...stored?.[l]}])));
+ const [draft,setDraft]=useState(()=>Object.fromEntries(Object.keys(defaults).map(l=>[l,merge(defaults[l][section],stored?.[l])])));
  const [status,setStatus]=useState("");
  const [busy,setBusy]=useState(false);
  async function save(e){e.preventDefault();setBusy(true);setStatus("");try{await api("/rest/v1/portfolio_content?on_conflict=section",{token,method:"POST",headers:{Prefer:"resolution=merge-duplicates"},body:{section,content:draft,updated_at:new Date().toISOString()}});onSaved(section,draft);setStatus("Saqlandi");}catch(e){setStatus(e.message)}finally{setBusy(false)}}
