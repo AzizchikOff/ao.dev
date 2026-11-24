@@ -21,12 +21,12 @@ export default function Certificates() {
   const [certificates,setCertificates]=useState(configured?[]:initialCertificates);
   const [error,setError]=useState("");
   useEffect(()=>{if(configured) api("/rest/v1/portfolio_certificates?published=eq.true&select=*&order=position.asc").then(rows=>setCertificates(rows.map(r=>({...r,name:r.title,date:r.issued_on,code:r.certificate_code})))).catch(()=>setError("Certificates unavailable"));},[]);
-  async function openPdf(path){try{const data=await api("/storage/v1/object/sign/portfolio-certificates/"+encodeURIComponent(path),{method:"POST",body:{expiresIn:60}});const url=import.meta.env.VITE_SUPABASE_URL.replace(/\/$/,"");window.location.assign(url+"/storage/v1"+data.signedURL);}catch(e){setError(e.message);}}
+  async function openPdf(path){try{const data=await api("/storage/v1/object/sign/portfolio-certificates/"+encodeURIComponent(path),{method:"POST",body:{expiresIn:60}});const url=import.meta.env.VITE_SUPABASE_URL.replace(/\/$/,"");const signed=data.signedURL;if(typeof signed!=="string"||!signed.startsWith("/"))throw new Error("Invalid PDF link");window.location.assign(url+(signed.startsWith("/storage/v1/")?"":"/storage/v1")+signed);}catch(e){setError(e.message);}}
   const { i18n } = useTranslation();
   const t = copy[i18n.language?.slice(0, 2)] || copy.uz;
   return <section className="block certificates-section" id="certificates"><div className="wrap">
     <div className="sec-head"><span className="sec-tag">007 / {t.tag}</span><div className="sec-line" /><h2>{t.title}</h2></div>
-    <p className="certificates-intro">{error || t.title}</p>
+    <p className="certificates-intro">{error || (certificates.length ? "" : "—")}</p>
     <div className="certificates-grid">{certificates.map(cert => <article className="certificate-card" key={cert.id}>
       <div className="certificate-top"><Award size={27} aria-hidden="true" /><span>{cert.issuer}</span></div>
       <h3>{cert.name}</h3>
