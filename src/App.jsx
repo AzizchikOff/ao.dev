@@ -15,6 +15,7 @@ import Blog from "./components/Blog";
 import Resume from "./components/Resume";
 import Certificates from "./components/Certificates";
 import DeveloperTerminal from "./components/DeveloperTerminal";
+import PortfolioAssistant from "./components/PortfolioAssistant";
 import Admin from "./components/Admin";
 
 export default function App() {
@@ -40,7 +41,7 @@ export default function App() {
         {settings.showResume!==false && <Resume />}
         <Contact />
       </main>
-      <Footer />
+      <Footer /><PortfolioAssistant />
     </>
   );
 }
