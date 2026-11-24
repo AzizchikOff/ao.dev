@@ -1,24 +1,20 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { motion } from "framer-motion";
 import { ArrowUpRight, X, Search } from "lucide-react";
-import useReveal from "../hooks/useReveal";
 import GitHubLive from "./GitHubLive";
 import "./Work.css";
 import "./WorkEnhancements.css";
 
 function ProjectRow({ project, flip, viewLabel, onOpen }) {
-  const [ref, inView] = useReveal(0.1);
   return (
-    <motion.article className={`project ${flip ? "project-row-flip" : ""}`} ref={ref}
-      initial={{ opacity: 0, y: 30 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.7 }}>
+    <article className={`project ${flip ? "project-row-flip" : ""}`}>
       <div className="project-visual" data-cursor="Ochish">{project.imageUrl?.startsWith("https://") && <img src={project.imageUrl} alt={project.title} loading="lazy" style={{width:"100%",height:"100%",objectFit:"cover",position:"absolute",inset:0}}/>}<div className="glow" /><span className="mono-tag">{project.file}</span></div>
       <div className="project-body">
         <div className="project-index">{project.index}</div><h3>{project.title}</h3><p>{project.desc}</p>
         <div className="project-tags">{project.tags.map(tag => <span key={tag}>{tag}</span>)}</div>
         <button type="button" className="project-link" onClick={onOpen} data-cursor="Ochish">{viewLabel} <ArrowUpRight size={15}/></button>
       </div>
-    </motion.article>
+    </article>
   );
 }
 
