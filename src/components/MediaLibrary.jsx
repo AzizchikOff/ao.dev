@@ -1,0 +1,10 @@
+import {useState,useEffect,useCallback} from "react";
+import {api} from "../lib/portfolioApi";
+export default function MediaLibrary({token}){
+ const [items,setItems]=useState([]),[status,setStatus]=useState(""),[busy,setBusy]=useState(false);
+ const load=useCallback(async()=>{try{setItems(await api("/storage/v1/object/list/portfolio-media",{token,method:"POST",body:{prefix:"",limit:100,sortBy:{column:"created_at",order:"desc"}}}));}catch(e){setStatus(e.message)}},[token]);
+ useEffect(()=>{load()},[load]);
+ const url=name=>import.meta.env.VITE_SUPABASE_URL.replace(/\/$/,"")+"/storage/v1/object/public/portfolio-media/"+encodeURIComponent(name);
+ async function upload(e){e.preventDefault();const form=e.currentTarget;const file=new FormData(form).get("file");const ext={"image/jpeg":"jpg","image/png":"png","image/webp":"webp","application/pdf":"pdf"}[file?.type];if(!ext||file.size>10485760){setStatus("JPG, PNG, WEBP yoki PDF; 10 MB gacha.");return}setBusy(true);try{await api("/storage/v1/object/portfolio-media/"+crypto.randomUUID()+"."+ext,{token,method:"POST",body:file,headers:{"Content-Type":file.type}});form.reset();await load();setStatus("Yuklandi");}catch(e){setStatus(e.message)}finally{setBusy(false)}}
+ return <section className="admin-card"><h2>Media kutubxonasi</h2><p>Bu fayllar ommaviy. Maxfiy hujjatlarni yuklamang.</p><form className="admin-card" onSubmit={upload}><input name="file" type="file" accept="image/jpeg,image/png,image/webp,application/pdf" required/><button disabled={busy}>Yuklash</button></form><div className="admin-metrics">{items.filter(x=>x.id).map(x=><article key={x.id}>{/\.(jpg|png|webp)$/.test(x.name)?<img src={url(x.name)} alt="Media" style={{width:"100%",height:120,objectFit:"cover",borderRadius:8}}/>:<span>PDF</span>}<a href={url(x.name)} target="_blank" rel="noreferrer">Ochish</a><button onClick={async()=>{try{await navigator.clipboard.writeText(url(x.name));setStatus("Havola nusxalandi")}catch{setStatus("Havolani ochib nusxalang")}}}>URL nusxalash</button></article>)}</div><p role="status">{status}</p></section>
+}
