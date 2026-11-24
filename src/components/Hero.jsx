@@ -1,5 +1,5 @@
 import {useTranslation} from "react-i18next";
-import {ArrowRight,Download,Code2,Layers,Award,Terminal, GitBranch, Gem, Zap, ShieldCheck} from "lucide-react";
+import {ArrowRight,Download,Code2,Layers, GitBranch, Gem, Zap, ShieldCheck} from "lucide-react";
 import "./Hero.css";
 export default function Hero(){
  const {t,i18n}=useTranslation();
