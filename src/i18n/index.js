@@ -1,4 +1,6 @@
 import { api, configured } from "../lib/portfolioApi";
+import {blogDefaults} from "../lib/blogDefaults";
+import {resumeDefaults} from "../lib/resumeDefaults";
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import uz from "./locales/uz";
@@ -17,9 +19,9 @@ const savedLang = (() => {
 
 i18n.use(initReactI18next).init({
   resources: {
-    uz: { translation: uz },
-    ru: { translation: ru },
-    en: { translation: en },
+    uz: { translation: {...uz,blog:blogDefaults.uz,resume:resumeDefaults.uz} },
+    ru: { translation: {...ru,blog:blogDefaults.ru,resume:resumeDefaults.ru} },
+    en: { translation: {...en,blog:blogDefaults.en,resume:resumeDefaults.en} },
   },
   lng: savedLang || "uz",
   fallbackLng: "uz",
