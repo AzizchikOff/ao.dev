@@ -1,3 +1,4 @@
+import {api,configured} from "../lib/portfolioApi";
 import { useEffect, useState, useCallback } from "react";
 import { themes, themeOrder } from "./themes";
 import { ThemeContext } from "./theme-context-instance";
@@ -15,6 +16,7 @@ export function ThemeProvider({ children }) {
     return "signal";
   });
 
+  useEffect(()=>{if(configured && !window.location.pathname.startsWith("/admin") && !localStorage.getItem(STORAGE_KEY))api("/rest/v1/portfolio_content?section=eq.settings&select=content").then(r=>{const id=r[0]?.content?.defaultTheme;if(Object.hasOwn(themes,id))setThemeId(id)}).catch(()=>{});},[]);
   useEffect(() => {
     const tokens = themes[themeId].tokens;
     const root = document.documentElement;

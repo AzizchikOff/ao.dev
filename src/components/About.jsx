@@ -1,65 +1,12 @@
-import { useTranslation } from "react-i18next";
-import { motion } from "framer-motion";
-import useReveal from "../hooks/useReveal";
+import {useTranslation} from "react-i18next";
+import {User,Layers,GitBranch,MapPin,Briefcase} from "lucide-react";
 import RichText from "./RichText";
+import GitHubLive from "./GitHubLive";
+import TechIcon from "./TechIcon";
 import "./About.css";
-
-export default function About() {
-  const { t } = useTranslation();
-  const [textRef, textIn] = useReveal();
-  const [metaRef, metaIn] = useReveal();
-
-  const meta = t("about.meta", { returnObjects: true });
-
-  const metaRows = [
-    [meta.location, meta.locationVal],
-    [meta.experience, meta.experienceVal],
-    [meta.direction, meta.directionVal],
-    [meta.stack, meta.stackVal],
-  ];
-
-  return (
-    <section className="block" id="about">
-      <div className="wrap">
-        <div className="sec-head">
-          <span className="sec-tag">{t("about.tag")}</span>
-          <div className="sec-line" />
-          <h2>{t("about.title")}</h2>
-        </div>
-
-        <div className="about-grid">
-          <motion.div
-            className="about-text"
-            ref={textRef}
-            initial={{ opacity: 0, y: 24 }}
-            animate={textIn ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7 }}
-          >
-            <p><RichText text={t("about.p1")} /></p>
-            <p><RichText text={t("about.p2")} /></p>
-            <p><RichText text={t("about.p3")} /></p>
-          </motion.div>
-
-          <motion.div
-            className="about-meta"
-            ref={metaRef}
-            initial={{ opacity: 0, y: 24 }}
-            animate={metaIn ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, delay: 0.15 }}
-          >
-            {metaRows.map(([label, val], i) => (
-              <div className="meta-row" key={i}>
-                <span>{label}</span>
-                <span>{val}</span>
-              </div>
-            ))}
-            <div className="meta-row">
-              <span>{meta.status}</span>
-              <span className="status-available">{meta.statusVal}</span>
-            </div>
-          </motion.div>
-        </div>
-      </div>
-    </section>
-  );
+export default function About(){
+ const {t,i18n}=useTranslation();const lang=i18n.language?.slice(0,2);
+ const labels=({uz:["Qisqacha bio","Texnologiyalar","Mavjudlik holati","Tajriba"],ru:["Биография","Технологии","Доступность","Опыт"],en:["Biography","Technologies","Availability","Experience"]})[lang]||["Bio","Stack","Status","Experience"];
+ const meta=t("about.meta",{returnObjects:true})||{};const firstName=t("hero.firstName",{defaultValue:"Abdulaziz"});const lastName=t("hero.lastName",{defaultValue:"Orifov"});const role=t("hero.role",{defaultValue:"Fullstack Developer"});const photo=t("about.photoUrl",{defaultValue:""});const skills=t("skills.cards",{returnObjects:true});const tags=[...new Set((Array.isArray(skills)?skills:[]).flatMap(s=>Array.isArray(s.tags)?s.tags:[]))];const experience=t("experience.items",{returnObjects:true});
+ return <section className="block" id="about"><div className="wrap"><div className="sec-head"><span className="sec-tag">{t("about.tag")}</span><h2>{t("about.title")}</h2><p className="about-heading-note">{labels[0]} · {labels[1]} · {labels[3]}</p></div><div className="neon-bento"><article className="bento-profile"><div className="bento-photo">{typeof photo==="string"&&photo.startsWith("https://")?<img src={photo} alt={`${firstName} ${lastName}`}/>:<span>AO</span>}</div><h2>{firstName} <em>{lastName}</em></h2><p>{role}</p><p><MapPin size={16}/> {meta.locationVal}</p><a href="https://github.com/AzizchikOff"><GitBranch size={22}/> GitHub</a></article><article className="bento-bio"><h3><User/> {labels[0]}</h3>{["p1","p2","p3"].map(k=><p key={k}><RichText text={t("about."+k)}/></p>)}</article><article className="bento-tech"><h3><Layers/> {labels[1]}</h3><div>{tags.map(tag=><span key={tag}><TechIcon name={tag}/>{tag}</span>)}</div></article><article className="bento-github"><GitHubLive/></article><article className="bento-status"><h3>{labels[2]}</h3><p className="status-available">{meta.statusVal}</p><p>{meta.directionVal}</p></article><article className="bento-experience"><h3><Briefcase/> {labels[3]}</h3>{(Array.isArray(experience)?experience:[]).map((e,i)=><p key={i}><strong>{e.role}</strong><br/>{e.date} · {e.place}</p>)}</article></div></div></section>
 }

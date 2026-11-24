@@ -1,3 +1,6 @@
+import { api, configured } from "../lib/portfolioApi";
+import {blogDefaults} from "../lib/blogDefaults";
+import {resumeDefaults} from "../lib/resumeDefaults";
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import uz from "./locales/uz";
@@ -16,9 +19,9 @@ const savedLang = (() => {
 
 i18n.use(initReactI18next).init({
   resources: {
-    uz: { translation: uz },
-    ru: { translation: ru },
-    en: { translation: en },
+    uz: { translation: {...uz,blog:blogDefaults.uz,resume:resumeDefaults.uz} },
+    ru: { translation: {...ru,blog:blogDefaults.ru,resume:resumeDefaults.ru} },
+    en: { translation: {...en,blog:blogDefaults.en,resume:resumeDefaults.en} },
   },
   lng: savedLang || "uz",
   fallbackLng: "uz",
@@ -34,4 +37,12 @@ i18n.on("languageChanged", (lng) => {
   }
 });
 
+if(configured && !window.location.pathname.startsWith("/admin")){
+ api("/rest/v1/portfolio_content?select=section,content").then(rows=>{
+  for(const row of rows) for(const lang of ["uz","ru","en"]){
+   if(row.content?.[lang]) i18n.addResource(lang,"translation",row.section,row.content[lang]);
+  }
+  i18n.emit("languageChanged",i18n.language);
+ }).catch(console.error);
+}
 export default i18n;
