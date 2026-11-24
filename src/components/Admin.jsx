@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { api, configured, listCertificates } from "../lib/portfolioApi";
 import "./Admin.css";
+import CmsEditor from "./CmsEditor";
+const sections={hero:"Bosh sahifa",about:"O‘zim haqimda",skills:"Ko‘nikmalar",work:"Loyihalar",experience:"Tajriba",contact:"Kontaktlar",footer:"Footer"};
 
 const empty = { title: "", issuer: "", issued_on: "", certificate_code: "", credential_url: "", published: false, position: 0 };
 export default function Admin() {
+  const [cms,setCms]=useState({});
   const [tab, setTab] = useState("dashboard");
   const [file, setFile] = useState(null);
   const [token, setToken] = useState("");
@@ -23,6 +26,7 @@ export default function Admin() {
       const session = await api("/auth/v1/token?grant_type=password", { method: "POST", body: { email: fields.get("email"), password: fields.get("password") } });
       const allowed = await api("/rest/v1/rpc/is_portfolio_admin", { method: "POST", token: session.access_token, body: {} });
       if (allowed !== true) throw new Error("Administrator access denied.");
+      const content=await api("/rest/v1/portfolio_content?select=section,content",{token:session.access_token}); setCms(Object.fromEntries(content.map(r=>[r.section,r.content])));
       setRows(await listCertificates(session.access_token)); setToken(session.access_token);
     });
   }
@@ -54,7 +58,7 @@ export default function Admin() {
   }
   const change = (k,v) => setForm(f => ({ ...f, [k]: v }));
   return <main className="admin-shell"><header className="admin-head"><a href="/">AO / Portfolio</a><h1>Admin Dashboard</h1>{token && <button onClick={() => {setToken("");setRows([]);setForm(empty);setEditing(null);setStatus("");}}>Chiqish</button>}</header>
-    {!configured ? <p>Supabase environment variables are missing.</p> : !token ? <form className="admin-card" onSubmit={login}><h2>Administrator login</h2><label>Email<input name="email" type="email" autoComplete="username" required /></label><label>Parol<input name="password" type="password" autoComplete="current-password" required /></label><button disabled={busy}>Kirish</button></form> : <div className="admin-layout"><aside className="admin-sidebar"><button onClick={()=>setTab("dashboard")}>Dashboard</button><button onClick={()=>setTab("certificates")}>Sertifikatlar</button></aside><div className="admin-main">{tab === "dashboard" ? <section className="admin-card"><h2>Portfolio boshqaruvi</h2><p>Sertifikatlar: {rows.length}</p><button onClick={()=>setTab("certificates")}>Sertifikatlarni boshqarish</button></section> : <>
+    {!configured ? <p>Supabase environment variables are missing.</p> : !token ? <form className="admin-card" onSubmit={login}><h2>Administrator login</h2><label>Email<input name="email" type="email" autoComplete="username" required /></label><label>Parol<input name="password" type="password" autoComplete="current-password" required /></label><button disabled={busy}>Kirish</button></form> : <div className="admin-layout"><aside className="admin-sidebar"><button onClick={()=>setTab("dashboard")}>Dashboard</button><button onClick={()=>setTab("certificates")}>Sertifikatlar</button>{Object.entries(sections).map(([k,v])=><button key={k} onClick={()=>setTab(k)}>{v}</button>)}</aside><div className="admin-main">{tab === "dashboard" ? <section className="admin-card"><h2>Portfolio boshqaruvi</h2><p>Sertifikatlar: {rows.length}</p><button onClick={()=>setTab("certificates")}>Sertifikatlarni boshqarish</button></section> : tab !== "certificates" ? <CmsEditor key={tab} section={tab} token={token} stored={cms[tab]} onSaved={(k,v)=>setCms(c=>({...c,[k]:v}))}/> : <>
       <form className="admin-card" onSubmit={save}><h2>{editing ? "Sertifikatni tahrirlash" : "Yangi sertifikat"}</h2>
       { [["title","Nomi","text"],["issuer","Tashkilot","text"],["issued_on","Sana","date"],["certificate_code","Sertifikat kodi","text"],["credential_url","Tasdiqlash URL","url"]].map(([k,label,type]) => <label key={k}>{label}<input type={type} value={form[k]} onChange={e=>change(k,e.target.value)} required={k==="title"||k==="issuer"} /></label>)}
       <label>PDF fayl (10 MB gacha)<input key={editing || "new"} type="file" accept="application/pdf" onChange={e=>setFile(e.target.files[0] || null)}/></label>
