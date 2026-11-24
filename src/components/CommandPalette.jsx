@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import "./CommandPalette.css";
 
 const destinations = [
-  ["about", "About"], ["skills", "Skills"], ["work", "Projects"],
+  ["", "Home"], ["terminal", "Terminal"], ["github", "GitHub"], ["about", "About"], ["skills", "Skills"], ["work", "Projects"],
   ["experience", "Experience"], ["playground", "Playground"], ["blog", "Blog"], ["certificates", "Certificates"], ["resume", "CV"], ["contact", "Contact"]
 ];
 export default function CommandPalette() {
@@ -57,7 +57,7 @@ export default function CommandPalette() {
   return <div className="command-overlay" onMouseDown={e => { if (e.target === e.currentTarget) setOpen(false); }}>
     <div className="command-dialog" role="dialog" aria-modal="true" aria-label="Quick navigation">
       <div className="command-search"><Search size={20}/><input ref={searchRef} placeholder="Search sections…" value={query} onChange={e => setQuery(e.target.value)}/><button aria-label="Close" onClick={() => setOpen(false)}><X size={18}/></button></div>
-      <div className="command-results">{items.map(item => <a key={item.id} href={`#${item.id}`} onClick={() => setOpen(false)}>{item.name}<span>↵</span></a>)}{!items.length && <p>No results</p>}</div>
+      <div className="command-results">{items.map(item => <a key={item.id} href={`/${item.id}`} onClick={() => setOpen(false)}>{item.name}<span>↵</span></a>)}{!items.length && <p>No results</p>}</div>
       <div className="command-hint">Ctrl / ⌘ + K · Esc</div>
     </div>
   </div>;
