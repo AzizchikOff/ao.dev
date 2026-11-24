@@ -1,3 +1,4 @@
+import { api, configured } from "../lib/portfolioApi";
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import uz from "./locales/uz";
@@ -34,4 +35,12 @@ i18n.on("languageChanged", (lng) => {
   }
 });
 
+if(configured && !window.location.pathname.startsWith("/admin")){
+ api("/rest/v1/portfolio_content?select=section,content").then(rows=>{
+  for(const row of rows) for(const lang of ["uz","ru","en"]){
+   if(row.content?.[lang]) i18n.addResourceBundle(lang,"translation",{[row.section]:row.content[lang]},true,true);
+  }
+  i18n.emit("languageChanged",i18n.language);
+ }).catch(console.error);
+}
 export default i18n;
