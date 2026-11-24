@@ -70,7 +70,7 @@ export default function Admin() {
       <label>PDF fayl (10 MB gacha)<input key={editing || "new"} type="file" accept="application/pdf" onChange={e=>setFile(e.target.files[0] || null)}/></label>
       <label>Tartib<input type="number" value={form.position} onChange={e=>change("position",Number(e.target.value))}/></label>
       <label className="admin-check"><input type="checkbox" checked={form.published} onChange={e=>change("published",e.target.checked)}/>Saytda ko‘rsatish</label>
-      <button disabled={busy}>Saqlash</button>{editing && <button type="button" onClick={()=>{setEditing(null);setForm(empty);}}>Bekor qilish</button>}</form>
+      <button disabled={busy}>Saqlash</button>{editing && <button type="button" onClick={()=>{setEditing(null);setForm(empty);setFile(null);}}>Bekor qilish</button>}</form>
       <section className="admin-card"><h2>Sertifikatlar ({rows.length})</h2>{rows.map(row=><article className="admin-row" key={row.id}><div><strong>{row.title}</strong><p>{row.issuer} · {row.published?"Nashr qilingan":"Qoralama"}</p></div><button disabled={busy} onClick={()=>edit(row)}>Tahrirlash</button><button disabled={busy} onClick={()=>remove(row.id)}>O‘chirish</button></article>)}</section>
     </>}</div></div>}{status && <p role="status" className="admin-status">{status}</p>}</main>;
 }
