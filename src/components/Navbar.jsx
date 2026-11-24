@@ -23,6 +23,7 @@ export default function Navbar() {
     { href: "/work", key: "work" },
     { href: "/experience", key: "experience" },
     { href: "/playground", key: "playground" },
+    {href:"/terminal",key:"terminal"},
     { href: "/blog", key: "blog" },
     { href: "/certificates", key: "certificates" },
     { href: "/resume", key: "resume" },
@@ -38,7 +39,7 @@ export default function Navbar() {
         <div className="nav-links">
           {links.map((l) => (
             <a key={l.key} href={l.href} aria-current={window.location.pathname===l.href?"page":undefined} data-cursor="O'tish">
-              {["playground","blog","resume","certificates"].includes(l.key) ? ({playground:"Playground",blog:"Blog",resume:"CV",certificates:"Certificates"})[l.key] : t(`nav.${l.key}`,{defaultValue:l.key==="home"?"Home":l.key})}
+              {["playground","blog","resume","certificates","terminal"].includes(l.key) ? ({terminal:"Terminal",playground:"Playground",blog:"Blog",resume:"CV",certificates:"Certificates"})[l.key] : t(`nav.${l.key}`,{defaultValue:l.key==="home"?"Home":l.key})}
             </a>
           ))}
           <a href="/contact" className="nav-cta" data-cursor="Yozish">
@@ -56,7 +57,7 @@ export default function Navbar() {
           <button
             className="mobile-toggle"
             onClick={() => setMobileOpen((o) => !o)}
-            aria-label="Menu"
+            aria-label="Menu" aria-expanded={mobileOpen}
           >
             {mobileOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
@@ -67,7 +68,7 @@ export default function Navbar() {
         <div className="mobile-menu">
           {links.map((l) => (
             <a key={l.key} href={l.href} aria-current={window.location.pathname===l.href?"page":undefined} onClick={() => setMobileOpen(false)}>
-              {["playground","blog","resume"].includes(l.key) ? ({playground:"Playground",blog:"Blog",resume:"CV"})[l.key] : t(`nav.${l.key}`,{defaultValue:l.key==="home"?"Home":l.key})}
+              {["playground","blog","resume","certificates","terminal"].includes(l.key) ? ({terminal:"Terminal",playground:"Playground",blog:"Blog",resume:"CV",certificates:"Certificates"})[l.key] : t(`nav.${l.key}`,{defaultValue:l.key==="home"?"Home":l.key})}
             </a>
           ))}
           <a href="/contact" onClick={() => setMobileOpen(false)}>
