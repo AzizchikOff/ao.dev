@@ -25,26 +25,16 @@ export default function App() {
  const [settings,setSettings]=useState({});
  useEffect(()=>{if(configured && !window.location.pathname.startsWith("/admin"))api("/rest/v1/portfolio_content?section=eq.settings&select=content").then(r=>setSettings(r[0]?.content||{})).catch(()=>{});},[]);
   if (window.location.pathname.replace(/\/$/, "") === "/admin") return <Admin />;
+  const page=window.location.pathname.replace(/\/$/,"")||"/";
+  const pages={"/":<><Hero/><GitHubLive/></>,"/about":<About/>,"/skills":<Skills/>,"/work":<Work/>,"/experience":<Experience/>,"/playground":<Playground/>,"/terminal":settings.showTerminal!==false?<DeveloperTerminal/>:null,"/blog":settings.showBlog!==false?<Blog/>:null,"/certificates":<Certificates/>,"/resume":settings.showResume!==false?<Resume/>:null,"/contact":<Contact/>,"/github":<GitHubLive/>};
   return (
-    <>
+    <div className="portfolio-site">
       <div className="bg-grid" />
       <CustomCursor />
       <CommandPalette />
       <Navbar />
-      <main>
-        <Hero />
-        <About />
-        <Skills />
-        <Work />
-        <Experience />
-        <Playground />
-        {settings.showTerminal!==false && <DeveloperTerminal />}
-        {settings.showBlog!==false && <Blog />}
-        <Certificates />
-        {settings.showResume!==false && <Resume />}
-        <GitHubLive /><Contact />
-      </main>
+      <main className="portfolio-page">{Object.hasOwn(pages,page)?pages[page]:<section className="block"><div className="wrap"><h2>404</h2><a href="/">AO.DEV → Home</a></div></section>}</main>
       <Footer /><PortfolioAssistant />
-    </>
+    </div>
   );
 }
