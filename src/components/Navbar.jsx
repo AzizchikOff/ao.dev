@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Home, User, Layers, Award, FileText, Mail, Settings, MoreHorizontal } from "lucide-react";
 import LanguageSwitcher from "./LanguageSwitcher";
 import ThemeSwitcher from "./ThemeSwitcher";
 import "./Navbar.css";
 
+const navIcons={home:Home,about:User,work:Layers,certificates:Award,blog:FileText};
 export default function Navbar() {
   const { t } = useTranslation();
   const [moreOpen,setMoreOpen]=useState(false);
@@ -17,6 +18,7 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  useEffect(()=>{const close=e=>{if(e.key==="Escape"){setMoreOpen(false);setMobileOpen(false)}};document.addEventListener("keydown",close);return()=>document.removeEventListener("keydown",close)},[]);
   const links = [
     {href:"/",key:"home"},
     { href: "/about", key: "about" },
@@ -38,15 +40,16 @@ export default function Navbar() {
         </a>
 
         <div className="nav-links">
-          {links.filter(l=>["home","about","work","certificates","blog"].includes(l.key)).map((l) => (
+          {links.filter(l=>["home","about","work","certificates","blog"].includes(l.key)).map((l) => {const Icon=navIcons[l.key];return (
             <a key={l.key} href={l.href} aria-current={window.location.pathname===l.href?"page":undefined} data-cursor="O'tish">
+              <Icon size={16}/>
               {["playground","blog","resume","certificates","terminal"].includes(l.key) ? ({terminal:"Terminal",playground:"Playground",blog:"Blog",resume:"CV",certificates:"Certificates"})[l.key] : t(`nav.${l.key}`,{defaultValue:l.key==="home"?"Home":l.key})}
             </a>
-          ))}
+          )})}
           <a href="/contact" className="nav-cta" data-cursor="Yozish">
-            {t("nav.contact")}
+            <Mail size={16}/> {t("nav.contact")}
           </a>
-          <div className="nav-more"><button type="button" aria-expanded={moreOpen} onClick={()=>setMoreOpen(v=>!v)}>•••</button>{moreOpen&&<div className="nav-more-menu">{links.filter(l=>!["home","about","work","certificates","blog"].includes(l.key)).map(l=><a key={l.key} href={l.href}>{t(`nav.${l.key}`,{defaultValue:l.key})}</a>)}<a href="/github">GitHub</a></div>}</div><div className="nav-tools"><a href="/admin">Admin</a>
+          <div className="nav-more"><button type="button" aria-expanded={moreOpen} onClick={()=>setMoreOpen(v=>!v)} aria-label="More navigation"><MoreHorizontal size={20}/></button>{moreOpen&&<div className="nav-more-menu">{links.filter(l=>!["home","about","work","certificates","blog"].includes(l.key)).map(l=><a key={l.key} href={l.href}>{t(`nav.${l.key}`,{defaultValue:l.key})}</a>)}<a href="/github">GitHub</a></div>}</div><div className="nav-tools"><a href="/admin"><Settings size={16}/> Admin</a>
             <LanguageSwitcher />
             <ThemeSwitcher />
           </div>
