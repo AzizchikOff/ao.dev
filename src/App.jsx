@@ -12,8 +12,10 @@ import CommandPalette from "./components/CommandPalette";
 import Blog from "./components/Blog";
 import Resume from "./components/Resume";
 import Certificates from "./components/Certificates";
+import Admin from "./components/Admin";
 
 export default function App() {
+  if (window.location.pathname.replace(/\/$/, "") === "/admin") return <Admin />;
   return (
     <>
       <div className="bg-grid" />
