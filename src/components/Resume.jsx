@@ -10,6 +10,6 @@ export default function Resume(){
   <p className="editorial-lead">{t.summary}</p><h4>{t.skills}</h4><div className="resume-skills">{["React","JavaScript","HTML","CSS","Vite","Git"].map(v=><span key={v}>{v}</span>)}</div>
   <h4>{t.projects}</h4><a href="https://github.com/AzizchikOff" target="_blank" rel="noreferrer"><Code2 size={17}/>github.com/AzizchikOff</a>
   <h4>{t.contact}</h4><a href="https://t.me/prosto_senior" target="_blank" rel="noreferrer"><Send size={17}/>Telegram</a>
-  <p className="resume-note">{t.notice}</p></div>
+  {t.pdfUrl?.startsWith("https://") && <a href={t.pdfUrl} target="_blank" rel="noreferrer">CV PDF ↗</a>}<p className="resume-note">{t.notice}</p></div>
  </div></section>;
 }
