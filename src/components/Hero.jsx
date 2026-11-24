@@ -79,10 +79,10 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.6 }}
         >
-          <a href="#work" className="btn-primary" data-cursor={t("cursor.down")}>
+          <a href="/work" className="btn-primary" data-cursor={t("cursor.down")}>
             {t("hero.ctaPrimary")} <ArrowRight size={15} />
           </a>
-          <a href="#contact" className="btn-ghost" data-cursor={t("cursor.write")}>
+          <a href="/contact" className="btn-ghost" data-cursor={t("cursor.write")}>
             {t("hero.ctaGhost")}
           </a>
         </motion.div>
@@ -93,14 +93,14 @@ export default function Hero() {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.8 }}
         >
-          {stats.map((s, i) => (
+          {(Array.isArray(stats)?stats:[]).map((s, i) => (
             <div className="stack-item" key={i}>
               <b>{s.value}</b>
               {s.label}
             </div>
           ))}
         </motion.div>
-      </div><div className="ao-hero-art" aria-hidden="true"><div className="ao-orbit ao-orbit-one"/><div className="ao-orbit ao-orbit-two"/><div className="ao-monogram">AO</div><div className="ao-terminal-card"><span>● ● ●</span><code>aziz@portfolio:~$ whoami</code><strong>Abdulaziz Orifov</strong><code>Fullstack Developer ▌</code></div></div></div>
+      </div><div className="ao-hero-art" aria-hidden="true"><div className="ao-orbit ao-orbit-one"/><div className="ao-orbit ao-orbit-two"/><div className="ao-monogram">AO.</div><div className="ao-terminal-card"><span>● ● ●</span><code>aziz@portfolio:~$ whoami</code><strong>Abdulaziz Orifov</strong><code>Fullstack Developer ▌</code></div></div></div>
     </section>
   );
 }
