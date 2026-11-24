@@ -2,7 +2,7 @@ import { useState } from "react";
 import { api, configured, listCertificates } from "../lib/portfolioApi";
 import "./Admin.css";
 import CmsEditor from "./CmsEditor";
-const sections={hero:"Bosh sahifa",about:"O‘zim haqimda",skills:"Ko‘nikmalar",work:"Loyihalar",experience:"Tajriba",contact:"Kontaktlar",footer:"Footer"};
+const sections={hero:"Bosh sahifa",about:"O‘zim haqimda",skills:"Ko‘nikmalar",work:"Loyihalar",experience:"Tajriba",contact:"Kontaktlar",footer:"Footer",blog:"Blog",resume:"CV"};
 
 const empty = { title: "", issuer: "", issued_on: "", certificate_code: "", credential_url: "", published: false, position: 0 };
 export default function Admin() {
