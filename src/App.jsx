@@ -18,7 +18,9 @@ import DeveloperTerminal from "./components/DeveloperTerminal";
 import PortfolioAssistant from "./components/PortfolioAssistant";
 import Admin from "./components/Admin";
 
+let recorded=false;
 export default function App() {
+ useEffect(()=>{if(configured&&!recorded&&!window.location.pathname.startsWith("/admin")&&window.self===window.top){recorded=true;api("/rest/v1/rpc/record_portfolio_view",{method:"POST",body:{}}).catch(()=>{});}},[]);
  const [settings,setSettings]=useState({});
  useEffect(()=>{if(configured && !window.location.pathname.startsWith("/admin"))api("/rest/v1/portfolio_content?section=eq.settings&select=content").then(r=>setSettings(r[0]?.content||{})).catch(()=>{});},[]);
   if (window.location.pathname.replace(/\/$/, "") === "/admin") return <Admin />;
