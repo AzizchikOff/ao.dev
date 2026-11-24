@@ -1,106 +1,11 @@
-import { useTranslation } from "react-i18next";
-import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import {useTranslation} from "react-i18next";
+import {ArrowRight,Download,Code2,Layers,Award,Terminal, Github} from "lucide-react";
 import "./Hero.css";
-
-const lineVariants = {
-  hidden: { y: "100%" },
-  visible: (i) => ({
-    y: 0,
-    transition: { duration: 0.7, delay: 0.15 + i * 0.08, ease: [0.2, 0.8, 0.2, 1] },
-  }),
-};
-
-export default function Hero() {
-  const { t } = useTranslation();
-  const stats = t("hero.stats", { returnObjects: true });
-
-  return (
-    <section className="hero">
-      <div className="wrap ao-hero-grid"><div className="ao-hero-copy">
-        <motion.div
-          className="hero-eyebrow"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          <span className="dot" />
-          {t("hero.badge")} · {t("hero.location")}
-        </motion.div>
-
-        <h1>
-          <span className="line-mask">
-            <motion.span
-              className="line"
-              custom={0}
-              variants={lineVariants}
-              initial="hidden"
-              animate="visible"
-            >
-              {t("hero.line1")}
-            </motion.span>
-          </span>
-          <span className="line-mask">
-            <motion.span
-              className="line"
-              custom={1}
-              variants={lineVariants}
-              initial="hidden"
-              animate="visible"
-            >
-              <em>{t("hero.line2em")}</em> {t("hero.line2")}
-            </motion.span>
-          </span>
-          <span className="line-mask">
-            <motion.span
-              className="line"
-              custom={2}
-              variants={lineVariants}
-              initial="hidden"
-              animate="visible"
-            >
-              {t("hero.line3")}
-            </motion.span>
-          </span>
-        </h1>
-
-        <motion.p
-          className="hero-sub"
-          initial={{ opacity: 0, y: 14 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
-        >
-          {t("hero.sub")}
-        </motion.p>
-
-        <motion.div
-          className="hero-actions"
-          initial={{ opacity: 0, y: 14 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-        >
-          <a href="/work" className="btn-primary" data-cursor={t("cursor.down")}>
-            {t("hero.ctaPrimary")} <ArrowRight size={15} />
-          </a>
-          <a href="/contact" className="btn-ghost" data-cursor={t("cursor.write")}>
-            {t("hero.ctaGhost")}
-          </a>
-        </motion.div>
-
-        <motion.div
-          className="hero-stack"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
-        >
-          {(Array.isArray(stats)?stats:[]).map((s, i) => (
-            <div className="stack-item" key={i}>
-              <b>{s.value}</b>
-              {s.label}
-            </div>
-          ))}
-        </motion.div>
-      </div><div className="ao-hero-art" aria-hidden="true"><div className="ao-orbit ao-orbit-one"/><div className="ao-orbit ao-orbit-two"/><div className="ao-monogram">AO.</div><div className="ao-terminal-card"><span>● ● ●</span><code>aziz@portfolio:~$ whoami</code><strong>Abdulaziz Orifov</strong><code>Fullstack Developer ▌</code></div></div></div>
-    </section>
-  );
+export default function Hero(){
+ const {t,i18n}=useTranslation();
+ const lang=i18n.language?.slice(0,2);
+ const labels=({uz:["Loyihalar","Sertifikatlar","Texnologiyalar","Terminal","CV ni ko‘rish"],ru:["Проекты","Сертификаты","Технологии","Терминал","Резюме"],en:["Projects","Certificates","Technologies","Terminal","View CV"]})[lang]||["Loyihalar","Sertifikatlar","Texnologiyalar","Terminal","CV"];
+ const photo=t("about.photoUrl",{defaultValue:""});
+ const stats=t("hero.stats",{returnObjects:true});
+ return <section className="neon-home"><div className="wrap"><div className="neon-hero-grid"><div className="neon-intro"><span className="neon-eyebrow">&lt; Hello, I’m / &gt;</span><h1>ABDULAZIZ <em>ORIFOV<span>_</span></em></h1><h2>Fullstack Developer</h2><p>{t("hero.sub")}</p><div className="neon-actions"><a className="neon-primary" href="/work"><Code2 size={20}/>{t("hero.ctaPrimary")}<ArrowRight size={18}/></a><a className="neon-secondary" href="/resume"><Download size={18}/>{labels[4]}</a></div><div className="neon-stack">{(Array.isArray(stats)?stats:[]).map((s,i)=><span key={i}>{s.value}</span>)}<a href="https://github.com/AzizchikOff" aria-label="GitHub"><Github size={24}/></a></div></div><div className="neon-portrait"><div className="neon-orbit"/><div className="neon-ao" aria-hidden="true">AO</div>{typeof photo==="string"&&photo.startsWith("https://")&&<img src={photo} alt="Abdulaziz Orifov"/>}<div className="neon-mini-terminal"><span>🔴 🟡 🟢</span><code>ao@portfolio:~$ whoami</code><strong>Abdulaziz Orifov</strong><code>Fullstack Developer ▌</code></div></div></div><div className="neon-feature-grid">{[[Code2,"/work"],[Award,"/certificates"],[Layers,"/skills"],[Terminal,"/terminal"]].map(([Icon,url],i)=><a key={url} href={url}><Icon size={28}/><strong>{labels[i]}</strong><ArrowRight size={20}/></a>)}</div></div></section>
 }
