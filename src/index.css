@@ -140,3 +140,5 @@ section.block {
 
 /* Keyboard accessibility and small-screen improvements */
 html{scroll-padding-top:90px}button,a,input,textarea{touch-action:manipulation}button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:4px}@media(max-width:600px){.wrap{padding-left:20px;padding-right:20px}.sec-head{flex-wrap:wrap;gap:12px}.sec-line{min-width:20px}}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}}
+
+.ao-assistant{position:fixed;bottom:24px;right:24px;z-index:80;display:flex;flex-direction:column-reverse;align-items:flex-end;gap:10px;max-width:calc(100vw - 48px)}.ao-assistant button{background:var(--accent);color:white;border:0;border-radius:12px;padding:12px 16px;cursor:pointer}.ao-assistant-panel{width:min(340px,100%);padding:20px;border:1px solid var(--line);background:#101827;color:#edf3ff;border-radius:20px;box-shadow:0 12px 50px #0005;display:flex;flex-wrap:wrap;gap:8px}.ao-assistant-panel h3,.ao-assistant-panel p{width:100%;overflow-wrap:anywhere}
