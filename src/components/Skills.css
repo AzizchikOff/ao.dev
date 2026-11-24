@@ -56,3 +56,5 @@
     grid-template-columns: 1fr;
   }
 }
+
+.skills-grid{gap:16px;background:none;border:0;grid-template-columns:repeat(3,minmax(0,1fr))}.skill-card{border:1px solid var(--line);border-radius:22px;padding:clamp(20px,3vw,32px);background:linear-gradient(145deg,color-mix(in srgb,var(--accent) 6%,var(--ink)),var(--ink));transition:background .2s,border-color .2s,transform .2s}.skill-card:hover{border-color:var(--accent);transform:translateY(-3px)}.skill-card .num{display:inline-grid;place-items:center;min-width:40px;height:40px;border:1px solid var(--accent-dim);border-radius:12px;color:var(--accent)}@media(max-width:900px){.skills-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:560px){.skills-grid{grid-template-columns:1fr}}@media(prefers-reduced-motion:reduce){.skill-card:hover{transform:none}}
