@@ -17,11 +17,12 @@ function Fields({value,onChange,label,template,token}){
  if(label.endsWith("Url"))return <label>{labels[label]||label}<input type="url" value={value||""} onChange={e=>onChange(e.target.value)}/></label>;
  return <label>{labels[label]||label}<textarea rows={String(value).length>100?4:2} value={value??""} onChange={e=>onChange(e.target.value)}/></label>;
 }
-export default function CmsEditor({section,token,stored,onSaved}){
+export default function CmsEditor({section,token,stored,onSaved,onDirty}){
  const [lang,setLang]=useState("uz");
  const [draft,setDraft]=useState(()=>Object.fromEntries(Object.keys(defaults).map(l=>[l,merge(defaults[l][section],stored?.[l])])));
  const [baseline,setBaseline]=useState(()=>JSON.stringify(draft));
  const dirty=JSON.stringify(draft)!==baseline;
+ useEffect(()=>{onDirty?.(dirty)},[dirty,onDirty]);
  useEffect(()=>{if(!dirty)return;const warn=e=>{e.preventDefault();e.returnValue="";};window.addEventListener("beforeunload",warn);return()=>window.removeEventListener("beforeunload",warn)},[dirty]);
  const [status,setStatus]=useState("");
  const [busy,setBusy]=useState(false);
