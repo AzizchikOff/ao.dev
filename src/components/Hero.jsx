@@ -17,7 +17,7 @@ export default function Hero() {
 
   return (
     <section className="hero">
-      <div className="wrap">
+      <div className="wrap ao-hero-grid"><div className="ao-hero-copy">
         <motion.div
           className="hero-eyebrow"
           initial={{ opacity: 0, y: 10 }}
@@ -100,7 +100,7 @@ export default function Hero() {
             </div>
           ))}
         </motion.div>
-      </div>
+      </div><div className="ao-hero-art" aria-hidden="true"><div className="ao-orbit ao-orbit-one"/><div className="ao-orbit ao-orbit-two"/><div className="ao-monogram">AO</div><div className="ao-terminal-card"><span>● ● ●</span><code>aziz@portfolio:~$ whoami</code><strong>Abdulaziz Orifov</strong><code>Fullstack Developer ▌</code></div></div></div>
     </section>
   );
 }
