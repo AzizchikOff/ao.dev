@@ -16,6 +16,7 @@ import Resume from "./components/Resume";
 import Certificates from "./components/Certificates";
 import DeveloperTerminal from "./components/DeveloperTerminal";
 import PortfolioAssistant from "./components/PortfolioAssistant";
+import GitHubLive from "./components/GitHubLive";
 import Admin from "./components/Admin";
 
 let recorded=false;
@@ -41,7 +42,7 @@ export default function App() {
         {settings.showBlog!==false && <Blog />}
         <Certificates />
         {settings.showResume!==false && <Resume />}
-        <Contact />
+        <GitHubLive /><Contact />
       </main>
       <Footer /><PortfolioAssistant />
     </>
