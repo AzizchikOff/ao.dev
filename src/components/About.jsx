@@ -35,7 +35,7 @@ export default function About() {
             animate={textIn ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.7 }}
           >
-            <p><RichText text={t("about.p1")} /></p>
+            {t("about.photoUrl",{defaultValue:""}).startsWith("https://") && <img src={t("about.photoUrl")} alt="Abdulaziz Orifov" loading="lazy" style={{width:"100%",maxHeight:360,objectFit:"cover",borderRadius:16,marginBottom:20}}/>}<p><RichText text={t("about.p1")} /></p>
             <p><RichText text={t("about.p2")} /></p>
             <p><RichText text={t("about.p3")} /></p>
           </motion.div>
