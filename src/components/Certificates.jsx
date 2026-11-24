@@ -20,17 +20,19 @@ const copy = {
 export default function Certificates() {
   const [certificates,setCertificates]=useState(configured?[]:initialCertificates);
   const [error,setError]=useState("");
-  useEffect(()=>{if(configured) api("/rest/v1/portfolio_certificates?published=eq.true&select=*&order=position.asc").then(rows=>setCertificates(rows.map(r=>({...r,name:r.title,date:r.issued_on,code:r.certificate_code})))).catch(()=>setError("Certificates unavailable"));},[]);
+  const [loading,setLoading]=useState(configured);
+  useEffect(()=>{if(configured) api("/rest/v1/portfolio_certificates?published=eq.true&select=*&order=position.asc").then(rows=>setCertificates(rows.map(r=>({...r,name:r.title,date:r.issued_on,code:r.certificate_code})))).catch(()=>setError("Certificates unavailable")).finally(()=>setLoading(false));},[]);
   async function openPdf(path){try{const data=await api("/storage/v1/object/sign/portfolio-certificates/"+encodeURIComponent(path),{method:"POST",body:{expiresIn:60}});const url=import.meta.env.VITE_SUPABASE_URL.replace(/\/$/,"");const signed=data.signedURL;if(typeof signed!=="string"||!signed.startsWith("/"))throw new Error("Invalid PDF link");window.location.assign(url+(signed.startsWith("/storage/v1/")?"":"/storage/v1")+signed);}catch(e){setError(e.message);}}
   const { i18n } = useTranslation();
   const t = copy[i18n.language?.slice(0, 2)] || copy.uz;
   return <section className="block certificates-section" id="certificates"><div className="wrap">
     <div className="sec-head"><span className="sec-tag">007 / {t.tag}</span><div className="sec-line" /><h2>{t.title}</h2></div>
-    <p className="certificates-intro">{error || (certificates.length ? "" : "—")}</p>
+    <p className="certificates-intro">{error || (loading ? "…" : certificates.length ? "" : ({uz:"Hozircha nashr qilingan sertifikatlar yo‘q.",ru:"Пока нет опубликованных сертификатов.",en:"No published certificates yet."}[i18n.language?.slice(0,2)]))}</p>
     <div className="certificates-grid">{certificates.map(cert => <article className="certificate-card" key={cert.id}>
       <div className="certificate-top"><Award size={27} aria-hidden="true" /><span>{cert.issuer}</span></div>
       <h3>{cert.name}</h3>
       {cert.type && <p className="certificate-type"><ShieldCheck size={15} aria-hidden="true" /> {t.type}: {cert.type}</p>}
+      {typeof cert.credential_url==="string" && cert.credential_url.startsWith("https://") && <a href={cert.credential_url} target="_blank" rel="noreferrer">Credential ↗</a>}
       {cert.file_path && <button type="button" onClick={()=>openPdf(cert.file_path)}>PDF ↗</button>}
       <div className="certificate-meta"><span><CalendarDays size={15} aria-hidden="true" />{t.issued}: <time dateTime={cert.date}>{cert.date}</time></span><span>{t.code}: <code>{cert.code}</code></span></div>
     </article>)}</div>
