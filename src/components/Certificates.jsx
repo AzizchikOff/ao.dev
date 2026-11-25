@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { api, configured } from "../lib/portfolioApi";
 import { useTranslation } from "react-i18next";
 import { Award, CalendarDays, ShieldCheck, LayoutGrid, List, FileText } from "lucide-react";
@@ -24,9 +24,35 @@ async function signedPdf(path){
  return import.meta.env.VITE_SUPABASE_URL.replace(/\/$/,"")+(signed.startsWith("/storage/v1/")?"":"/storage/v1")+signed;
 }
 function PdfCover({cert}){
- const [url,setUrl]=useState("");
- useEffect(()=>{let active=true;if(cert.file_path)signedPdf(cert.file_path).then(v=>{if(active)setUrl(v)}).catch(()=>{});return()=>{active=false}},[cert.file_path]);
- return <div className="certificate-cover">{url?<iframe title={cert.name} src={url+"#page=1&toolbar=0&navpanes=0"} loading="lazy" tabIndex={-1}/>:<><Award size={48}/><strong>{cert.issuer}</strong><span>{cert.name}</span><small>{cert.code}</small></>}</div>;
+ const canvas=useRef(null);
+ const [ready,setReady]=useState(false);
+ useEffect(()=>{
+  let active=true, task, render;
+  async function draw(){
+   if(!cert.file_path)return;
+   try{
+    const base="https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/";
+    const pdfjs=await import(/* @vite-ignore */ (base+"pdf.min.mjs"));
+    if(!active)return;
+    pdfjs.GlobalWorkerOptions.workerSrc=base+"pdf.worker.min.mjs";
+    const url=await signedPdf(cert.file_path);
+    if(!active)return;
+    task=pdfjs.getDocument({url,isEvalSupported:false});
+    const pdf=await task.promise;
+    const page=await pdf.getPage(1);
+    if(!active||!canvas.current)return;
+    const viewport=page.getViewport({scale:Math.min(2,1000/page.getViewport({scale:1}).width)});
+    const node=canvas.current;
+    node.width=Math.ceil(viewport.width);node.height=Math.ceil(viewport.height);
+    render=page.render({canvasContext:node.getContext("2d"),viewport});
+    await render.promise;
+    if(active)setReady(true);
+   }catch{if(active)setReady(false)}
+  }
+  draw();
+  return()=>{active=false;render?.cancel();task?.destroy().catch(()=>{})};
+ },[cert.file_path]);
+ return <div className="certificate-cover"><canvas ref={canvas} role="img" aria-label={cert.name} style={{display:ready?"block":"none",width:"100%",height:"100%",objectFit:"contain"}}/>{!ready&&<><Award size={48}/><strong>{cert.issuer}</strong><span>{cert.name}</span><small>{cert.code}</small></>}</div>;
 }
 export default function Certificates() {
   const [certificates,setCertificates]=useState(configured?[]:initialCertificates);
