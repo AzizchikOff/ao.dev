@@ -1,6 +1,6 @@
 import {useEffect,useState} from "react";
 import {useTranslation} from "react-i18next";
-import {Printer,FileText} from "lucide-react";
+import {Printer,FileText,UserRound,GraduationCap,Languages,Code2,Layers,Award,Briefcase} from "lucide-react";
 import "./Editorial.css";
 import "./ResumeAuto.css";
 import {resumeDefaults} from "../lib/resumeDefaults";
@@ -32,7 +32,8 @@ function ResumeContent({text}){
  const groups=[];const intro=[];let current;
  const headings=/^(PROFIL|PROFILE|SUMMARY|ПРОФИЛЬ|О СЕБЕ|TA[’'‘ʻʼ]LIM|EDUCATION|ОБРАЗОВАНИЕ|TEXNIK KO[’'‘ʻʼ]NIKMALAR|TECHNICAL SKILLS|SKILLS|ТЕХНИЧЕСКИЕ НАВЫКИ|НАВЫКИ|TANLANGAN LOYIHALAR|SELECTED PROJECTS|PROJECTS|ИЗБРАННЫЕ ПРОЕКТЫ|ПРОЕКТЫ|TILLAR|LANGUAGES|ЯЗЫКИ|SERTIFIKATLAR|CERTIFICATES|CERTIFICATIONS|СЕРТИФИКАТЫ|EXPERIENCE|TAJRIBA|ОПЫТ)$/iu;
  for(const line of lines){if(headings.test(line)){current={title:line,lines:[]};groups.push(current)}else if(current)current.lines.push(line);else intro.push(line)}
- return <div className="cv-auto"><header className="cv-identity"><span className="cv-monogram" aria-hidden="true">AO</span><div><h3>{intro[0]}</h3><p className="cv-role">{intro[1]}</p><div className="cv-contacts">{intro.slice(2).map((v,i)=><span key={i}>{v}</span>)}</div></div></header><div className="cv-bento">{groups.map((g,i)=><section className="cv-tile" key={i}><span className="cv-number">{String(i+1).padStart(2,"0")}</span><h4>{g.title}</h4>{g.lines.map((v,j)=>{const skill=/^(Frontend|Backend|Database|Tools|Vositalar|Инструменты|Базы данных|Qo[’'‘ʻʼ]shimcha|Additional|Дополнительно):/iu.test(v);return skill?<div className="cv-skill-row" key={j}><strong>{v.split(":")[0]}</strong><div>{v.slice(v.indexOf(":")+1).split(",").map((x,k)=><span key={k}>{x.trim()}</span>)}</div></div>:<p key={j}>{v}</p>})}</section>)}</div></div>
+ const types=[[/^(PROFIL|PROFILE|SUMMARY|ПРОФИЛЬ|О СЕБЕ)$/iu,UserRound,0],[/^(TA.*LIM|EDUCATION|ОБРАЗОВАНИЕ)$/iu,GraduationCap,1],[/^(TILLAR|LANGUAGES|ЯЗЫКИ)$/iu,Languages,2],[/^(TEXNIK.*|TECHNICAL SKILLS|SKILLS|ТЕХНИЧЕСКИЕ НАВЫКИ|НАВЫКИ)$/iu,Code2,3],[/^(TANLANGAN LOYIHALAR|SELECTED PROJECTS|PROJECTS|ИЗБРАННЫЕ ПРОЕКТЫ|ПРОЕКТЫ)$/iu,Layers,4],[/^(SERTIFIKATLAR|CERTIFICATES|CERTIFICATIONS|СЕРТИФИКАТЫ)$/iu,Award,5]];const type=g=>types.find(([r])=>r.test(g.title))||[null,Briefcase,6];groups.sort((a,b)=>type(a)[2]-type(b)[2]);
+ return <div className="cv-auto"><header className="cv-identity"><span className="cv-monogram" aria-hidden="true">AO</span><div><h3>{intro[0]}</h3><p className="cv-role">{intro[1]}</p><div className="cv-contacts">{intro.slice(2).map((v,i)=><span key={i}>{v}</span>)}</div></div></header><div className="cv-bento">{groups.map((g,i)=>{const [,Icon,rank]=type(g);return <section className={"cv-tile cv-kind-"+rank} key={i}><span className="cv-number"><Icon size={22}/></span><h4>{g.title}</h4>{g.lines.map((v,j)=>{const skill=/^(Frontend|Backend|Database|Tools|Vositalar|Инструменты|Базы данных|Qo[’'‘ʻʼ]shimcha|Additional|Дополнительно):/iu.test(v);return skill?<div className="cv-skill-row" key={j}><strong>{v.split(":")[0]}</strong><div>{v.slice(v.indexOf(":")+1).split(",").map((x,k)=><span key={k}>{x.trim()}</span>)}</div></div>:<p key={j}>{v}</p>})}</section>})}</div></div>
 }
 export default function Resume(){
  const {i18n,t:translate}=useTranslation();
